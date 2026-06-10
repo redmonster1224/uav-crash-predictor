@@ -1,0 +1,18 @@
+
+# Processed UAV Telemetry Data
+
+This directory contains the cleaned, time-synchronized telemetry data extracted from raw PX4 `.ulog` files. 
+
+## Dataset Structure
+The data is resampled to a uniform frequency (e.g., 50Hz) to accommodate the LSTM Autoencoder sequence requirements. 
+
+**Features Extracted:**
+* `timestamp`: Unix epoch time of the logged data frame.
+* `motor_rpm_1` to `motor_rpm_4`: Individual electronic speed controller (ESC) outputs.
+* `pitch`, `roll`: Vehicle attitude (radians).
+* `yaw_rate`: Rotational velocity around the Z-axis.
+* `battery_voltage`: Total system voltage to track power loss.
+* `z_accel`: Z-axis vibration/acceleration to detect structural anomalies (propeller loss, loose mounts).
+
+## Methodology 
+The model utilizes a Self-Supervised Anomaly Detection Architecture. Therefore, `normal_flight_data.csv` contains ONLY healthy, nominal flight logs. The network is trained exclusively on this baseline data to learn standard aerodynamic behavior. `crash_test_data.csv` is used strictly for validation and testing the Reconstruction Error (MSE) threshold.
